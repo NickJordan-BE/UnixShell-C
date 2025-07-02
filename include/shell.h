@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "../include/parser.h"
+#include "../include/handler.h"
 
 void shell_loop(void);
 

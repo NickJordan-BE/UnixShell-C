@@ -1,5 +1,5 @@
-#ifndef SHELL_H
-#define SHELL_H
+#ifndef PARSER_H
+#define PARSER_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,7 +9,12 @@
 #define MAX_TOKENS 64
 #define DELIM " \t\r\n"
 
-char **parse_line(char *line);
+typedef struct {
+    int count;
+    char **tokens;
+} ParseResult;
+
+ParseResult parse_line(char *line);
 
 #endif
 
