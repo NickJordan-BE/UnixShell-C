@@ -15,6 +15,7 @@ typedef struct {
 } ParseResult;
 
 ParseResult parse_line(char *line);
+void free_tokens();
 
 #endif
 

@@ -12,6 +12,9 @@ typedef struct {
 
 CommandMapping commands[] = {
     {"echo", echo_command},
+    {"cd", cd_command},
+    {"exit", exit_command},
+    {"help", help_command},
     {NULL, NULL}
 };
 

@@ -12,8 +12,9 @@ typedef struct {
 } ParseResult;
 
 
+ParseResult result;
+
 ParseResult parse_line(char *line) {
-    ParseResult result;
 
     int bufsize = MAX_TOKENS, position = 0;
     result.tokens = malloc(bufsize * sizeof(char*));
@@ -42,4 +43,9 @@ ParseResult parse_line(char *line) {
     result.tokens[position] = NULL;
     result.count = position;
     return result;
+}
+
+void free_tokens() {
+    free(result.tokens);
+    result.tokens = NULL;
 }
