@@ -11,5 +11,9 @@ void echo_command(int argc, char **argv);
 void cd_command(int argc, char **argv);
 void exit_command(int argc, char **argv);
 void help_command(int argc, char **argv);
+void history_command(int argc, char **argv);
+void pwd_command(int argc, char **argv);
+void clear_command(int argc, char **argv);
+void sizeof_command(int argc, char **argv);
 
 #endif

@@ -15,6 +15,10 @@ CommandMapping commands[] = {
     {"cd", cd_command},
     {"exit", exit_command},
     {"help", help_command},
+    {"history", history_command},
+    {"pwd", pwd_command},
+    {"sizeof", sizeof_command},
+    {"clear", clear_command},
     {NULL, NULL}
 };
 
