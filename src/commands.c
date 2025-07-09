@@ -2,6 +2,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <regex.h>
 #include "../include/parser.h"
 
 void echo_command(int argc, char **argv) {
@@ -40,16 +41,14 @@ void cd_command(int argc, char **argv) {
 }
 
 void exit_command(int argc, char **argv) {
-    (void)argc;
-    (void)argv;
+    (void)argc, (void)argv;
     free_tokens();
     printf("Exiting shelldon...\n");
     exit(0);
 }
 
 void help_command(int argc, char **argv) {
-    (void)argc;
-    (void)argv;
+    (void)argc, (void)argv;
     printf("Supported Commands:\n1. echo\n2. cd\n3. exit\n4. help\n");
 }
 
@@ -92,15 +91,13 @@ void sizeof_command(int argc, char **argv) {
 }
 
 void clear_command(int argc, char **argv) {
-    (void)argc;
-    (void)argv;
+    (void)argc, (void)argv;
     printf("\033[H\033[J");
     fflush(stdout);
 }
 
 void pwd_command(int argc, char **argv) {
-    (void)argc;
-    (void)argv;
+    (void)argc, (void)argv;
     char buffer[1024];
     
     if (getcwd(buffer, sizeof(buffer)) == NULL) {
@@ -108,4 +105,46 @@ void pwd_command(int argc, char **argv) {
     } else {
         printf("%s\n", buffer);
     }
+}
+
+void grep_command(int argc, char **argv) {
+    if (argc < 2) {
+        fprintf(stderr, "Invalid number of arguments.");
+    }
+
+    regex_t regex;
+    int reg_res;
+    memmove(argv[0], argv[0] + 1, strlen(argv[0]));
+    argv[0][strlen(argv[0]) - 1] = '\0';
+    char *path = argv[0], *pattern = argv[1];
+
+    reg_res = regcomp(&regex, pattern, REG_EXTENDED);
+
+    if (reg_res) {
+        fprintf(stderr, "Could not compile regex\n");
+        return;
+    }
+
+    FILE *fp = fopen(path, "r");
+
+    if (fp == NULL) {
+        fprintf(stderr, "Error opening file.\n");
+        return;
+    }
+
+    char *line = NULL;
+    size_t len = 0;
+    ssize_t read;
+
+    while ((read = getline(&line, &len, fp)) != 1 && strlen(line) != 0) {
+        reg_res = regexec(&regex, line, 0, NULL, 0);
+
+        if (!reg_res) {
+            printf("%s\n", line);
+        }
+    }
+
+    regfree(&regex);
+    free(line);
+    fclose(fp);
 }

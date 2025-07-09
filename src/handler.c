@@ -19,6 +19,7 @@ CommandMapping commands[] = {
     {"pwd", pwd_command},
     {"sizeof", sizeof_command},
     {"clear", clear_command},
+    {"grep", grep_command},
     {NULL, NULL}
 };
 

@@ -15,5 +15,6 @@ void history_command(int argc, char **argv);
 void pwd_command(int argc, char **argv);
 void clear_command(int argc, char **argv);
 void sizeof_command(int argc, char **argv);
+void grep_command(int argc, char **argv);
 
 #endif
