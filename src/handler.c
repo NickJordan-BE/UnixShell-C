@@ -48,7 +48,7 @@ void dispatch_command(int full_argc, char **full_argv) {
     CommandFunction cmd_fn = get_command(cmd_name);
 
     if (cmd_fn) {
-        return cmd_fn(full_argc - 1, full_argv + 1);
+        cmd_fn(full_argc - 1, full_argv + 1);
     } else {
         execute_external(full_argc, full_argv);
     }

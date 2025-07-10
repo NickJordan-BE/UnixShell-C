@@ -7,5 +7,6 @@
 #include <sys/wait.h>
 
 void execute_external(int argc, char **argv);
+void execute_external_pipe(int cmd_num, char **argv, int pipefd[2]);
 
 #endif

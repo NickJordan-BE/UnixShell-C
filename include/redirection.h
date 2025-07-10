@@ -6,7 +6,7 @@
 #include <string.h>
 #include <stdio.h>
 
-void handle_redirection(int argc, char **argv);
+char **handle_redirection(int argc, char **argv);
 
 
 #endif

@@ -2,6 +2,7 @@
 #include <string.h>
 #include "../include/parser.h"
 #include "../include/handler.h"
+#include "../include/piping.h"
 
 // Shell loop for prompting, calling parsing and function handling
 void shell_loop(void) {
@@ -30,8 +31,12 @@ void shell_loop(void) {
         buffer[strcspn(buffer, "\n")] = '\0';
 
         ParseResult res = parse_line(buffer);
-        
-        dispatch_command(res.count, res.tokens);
+
+        if (check_pipes(res.tokens) == 1) {        
+            handle_pipes(split_pipes(res.tokens).cmds);
+        } else {
+            dispatch_command(res.count, res.tokens);
+        }
     }
 
     fclose(fp);
