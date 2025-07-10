@@ -1,7 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/wait.h>
 #include <../include/commands.h>
+#include <../include/external.h>
 
 typedef void (*CommandFunction)(int argc, char **argv);
 
@@ -32,6 +35,8 @@ CommandFunction get_command(const char *name) {
     return NULL;
 }
 
+
+
 void dispatch_command(int full_argc, char **full_argv) {
     if (full_argc == 0) {
         fprintf(stderr, "Nothing Entered\n");
@@ -42,10 +47,11 @@ void dispatch_command(int full_argc, char **full_argv) {
 
     CommandFunction cmd_fn = get_command(cmd_name);
 
-    if (!cmd_fn) {
-        fprintf(stderr, "Unknown Command: %s\n", cmd_name);
-        return;
+    if (cmd_fn) {
+        return cmd_fn(full_argc - 1, full_argv + 1);
+    } else {
+        execute_external(full_argc, full_argv);
     }
-
-    return cmd_fn(full_argc - 1, full_argv + 1);
 }
+
+
