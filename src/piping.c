@@ -74,6 +74,26 @@ void free_pipes(int **pipes) {
     free(pipes);
 }
 
+void redirect_pipes(int **pipefd, int pos, int num_cmds) {
+    if (pos == 0) {
+        dup2(pipefd[pos % 2][1], STDOUT_FILENO);
+    } else if (pos == num_cmds - 1) {
+        dup2(pipefd[(pos + 1) % 2][0], STDIN_FILENO);
+    } else {
+        dup2(pipefd[(pos + 1) % 2][0], STDIN_FILENO);
+        dup2(pipefd[pos % 2][1], STDOUT_FILENO);
+    }
+
+    close_pipes(pipefd);
+} 
+
+void waitpid_all(pid_t *pids, int num_cmds) {
+    for (int i = 0; i < num_cmds; i++) {
+        int status;
+        waitpid(pids[i], &status, 0);
+    }
+}
+
 void handle_pipes(int num_cmds, char ***cmds) {
     int **pipefd = create_pipe();
 
@@ -84,29 +104,13 @@ void handle_pipes(int num_cmds, char ***cmds) {
         pids[i] = pid;
 
         if (pid == 0) {
-            if (i == 0) {
-                dup2(pipefd[i % 2][1], STDOUT_FILENO);
-            } else if (i == num_cmds - 1) {
-                dup2(pipefd[(i + 1) % 2][0], STDIN_FILENO);
-            } else {
-                dup2(pipefd[(i + 1) % 2][0], STDIN_FILENO);
-                dup2(pipefd[i % 2][1], STDOUT_FILENO);
-            }
-
-            close_pipes(pipefd);
-
+            redirect_pipes(pipefd, i, num_cmds);
             execvp(cmds[i][0], cmds[i]);
             perror("Shelldon Failed: ");
         }
     }
 
     close_pipes(pipefd);
-
-
-    for (int i = 0; i < num_cmds; i++) {
-        int status;
-        waitpid(pids[i], &status, 0);
-    }
-
+    waitpid_all(pids, num_cmds);
     free_pipes(pipefd);
 }
