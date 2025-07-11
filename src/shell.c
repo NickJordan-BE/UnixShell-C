@@ -1,3 +1,8 @@
+/**
+ * @file shell.c
+ * @brief Main shell loop
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <signal.h>
@@ -5,12 +10,17 @@
 #include "../include/handler.h"
 #include "../include/piping.h"
 
+/**
+ * @brief Ends current process and reprompts shell at SIGINT
+ */
 void sigint_handler() {
     printf("\nshelldon>> ");
     fflush(stdout);
 }
 
-// Shell loop for prompting, calling parsing and function handling
+/**
+ * @brief Shell loop for prompting, calling parsing, history tracking and function handling.
+ */ 
 void shell_loop() {
     FILE *fp = fopen("shelldon-history.txt", "a+");
     signal(SIGINT, sigint_handler);

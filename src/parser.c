@@ -1,3 +1,10 @@
+/**
+ * @file parser.c
+ * @brief For parsing input into tokens
+ *
+ * Implements tokenization logic
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,6 +13,12 @@
 #define MAX_TOKENS 64
 #define DELIM " \t\r\n"
 
+
+/**
+ * @brief Result from parsing
+ * 
+ * Used to store the count of the tokens and the token list
+ */
 typedef struct {
     int count;
     char **tokens;
@@ -14,6 +27,12 @@ typedef struct {
 
 ParseResult result;
 
+/**
+ * @brief Parses line into a list of tokens
+ * 
+ * @param line the line to be parsed
+ * @return ParseResult struct with list of tokens and number of tokens
+ */
 ParseResult parse_line(char *line) {
 
     int bufsize = MAX_TOKENS, position = 0;

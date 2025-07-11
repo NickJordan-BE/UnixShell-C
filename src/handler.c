@@ -1,3 +1,10 @@
+/**
+ * @file handler.c
+ * @brief Handles function calling for shell loop.
+ *
+ * Logic for dispatching built-in and external commands.
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -6,13 +13,18 @@
 #include <../include/commands.h>
 #include <../include/external.h>
 
+// Pointer to a function with parameters argc and **argv
 typedef void (*CommandFunction)(int argc, char **argv);
 
+/**
+ * @brief Stores the command name and the corresponding function
+ */
 typedef struct {
     const char *name;
     CommandFunction function;
 } CommandMapping;
 
+// Implemented commands
 CommandMapping commands[] = {
     {"echo", echo_command},
     {"cd", cd_command},
@@ -26,6 +38,15 @@ CommandMapping commands[] = {
     {NULL, NULL}
 };
 
+/**
+ * @brief Finds the corresponding command via name 
+ * 
+ * Finds if the command name is implemented and returns the corresponding 
+ * function, otherwise returns NULL.
+ * 
+ * @param name the name of the function
+ * @return The corresponding function or NULL
+ */
 CommandFunction get_command(const char *name) {
     for (int i = 0; commands[i].name != NULL; i++) {
         if (strcasecmp(name, commands[i].name) == 0) {
@@ -35,6 +56,15 @@ CommandFunction get_command(const char *name) {
     return NULL;
 }
 
+/**
+ * @brief Executes commands
+ *  
+ * Dispatches parsed tokens to corresponding function to be executed.
+ * If the function does not exist, it tries to fork and run an external command.
+ * 
+ * @param full_argc num of tokens
+ * @param full_argv list of tokens
+ */
 void dispatch_command(int full_argc, char **full_argv) {
     if (full_argc == 0) {
         fprintf(stderr, "Nothing Entered\n");
