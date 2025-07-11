@@ -35,8 +35,6 @@ CommandFunction get_command(const char *name) {
     return NULL;
 }
 
-
-
 void dispatch_command(int full_argc, char **full_argv) {
     if (full_argc == 0) {
         fprintf(stderr, "Nothing Entered\n");

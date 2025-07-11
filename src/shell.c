@@ -1,12 +1,19 @@
 #include <stdio.h>
 #include <string.h>
+#include <signal.h>
 #include "../include/parser.h"
 #include "../include/handler.h"
 #include "../include/piping.h"
 
+void sigint_handler() {
+    printf("\nshelldon>> ");
+    fflush(stdout);
+}
+
 // Shell loop for prompting, calling parsing and function handling
-void shell_loop(void) {
+void shell_loop() {
     FILE *fp = fopen("shelldon-history.txt", "a+");
+    signal(SIGINT, sigint_handler);
 
     if (fp == NULL) {
         fprintf(stderr, "Error opening history file.");
@@ -19,7 +26,6 @@ void shell_loop(void) {
         fflush(stdout);
         
         if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
-            printf("\nExiting shelldon...\n");
             break;
         }
 
