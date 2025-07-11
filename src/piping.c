@@ -48,43 +48,65 @@ SplitCmds split_pipes(char **argv) {
     return split_cmds;
 }
 
+int **create_pipe() {
+    int **pipefd = malloc(2 * sizeof(int *));
+    pipefd[0] = malloc(2 * sizeof(int));
+    pipefd[1] = malloc(2 * sizeof(int));
 
-void handle_pipes(char ***cmds) {
-    int pipefd[2];
-    
-    if (pipe(pipefd) == -1) {
+    if (pipe(pipefd[0]) == -1 || pipe(pipefd[1]) == -1) {
         perror("Pipe Error");
-        return;
+        return NULL;
     }
 
-    // for (int i = 0; cmds[i] != NULL; i++) {
-    //     execute_external_pipe(i, cmds[i], pipefd);
-    //     close(pipefd[0]);
-    //     close(pipefd[1]);
-    // }
+    return pipefd;
+}
 
-    pid_t pid1 = fork();
+void close_pipes(int **pipes) {
+    close(pipes[0][0]);
+    close(pipes[1][1]);
+    close(pipes[1][0]);
+    close(pipes[0][1]);
+}
 
-    if (pid1 == 0) {
-        dup2(pipefd[1], STDOUT_FILENO);
-        close(pipefd[0]);
-        execvp(cmds[0][0], cmds[0]);
-        perror("Shelldon Failed: ");
-    } 
+void free_pipes(int **pipes) {
+    free(pipes[0]);
+    free(pipes[1]);
+    free(pipes);
+}
 
-    pid_t pid2 = fork();
+void handle_pipes(int num_cmds, char ***cmds) {
+    int **pipefd = create_pipe();
 
-    if (pid2 == 0) {
-        dup2(pipefd[0], STDIN_FILENO);
-        close(pipefd[1]);
-        execvp(cmds[1][0], cmds[1]);
-        perror("Shelldon Failed: ");
+    pid_t pids[num_cmds];
+
+    for (int i = 0; i < num_cmds; i++) {
+        pid_t pid = fork();
+        pids[i] = pid;
+
+        if (pid == 0) {
+            if (i == 0) {
+                dup2(pipefd[i % 2][1], STDOUT_FILENO);
+            } else if (i == num_cmds - 1) {
+                dup2(pipefd[(i + 1) % 2][0], STDIN_FILENO);
+            } else {
+                dup2(pipefd[(i + 1) % 2][0], STDIN_FILENO);
+                dup2(pipefd[i % 2][1], STDOUT_FILENO);
+            }
+
+            close_pipes(pipefd);
+
+            execvp(cmds[i][0], cmds[i]);
+            perror("Shelldon Failed: ");
+        }
     }
 
-    int status1;
-    int status2;
-    close(pipefd[0]);
-    close(pipefd[1]);
-    waitpid(pid1, &status1, 0);
-    waitpid(pid2, &status2, 0);
+    close_pipes(pipefd);
+
+
+    for (int i = 0; i < num_cmds; i++) {
+        int status;
+        waitpid(pids[i], &status, 0);
+    }
+
+    free_pipes(pipefd);
 }

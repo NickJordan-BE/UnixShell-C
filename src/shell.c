@@ -32,8 +32,9 @@ void shell_loop(void) {
 
         ParseResult res = parse_line(buffer);
 
-        if (check_pipes(res.tokens) == 1) {        
-            handle_pipes(split_pipes(res.tokens).cmds);
+        if (check_pipes(res.tokens) == 1) {      
+            SplitCmds cmds = split_pipes(res.tokens);
+            handle_pipes(cmds.count, cmds.cmds);
         } else {
             dispatch_command(res.count, res.tokens);
         }

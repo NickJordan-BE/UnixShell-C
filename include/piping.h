@@ -15,6 +15,9 @@ typedef struct {
 
 int check_pipes(char **argv);
 SplitCmds split_pipes(char **argv);
-void handle_pipes(char ***cmds);
+void handle_pipes(int cmd_count, char ***cmds);
+int **create_pipe();
+void close_pipes(int **pipes);
+void free_pipes(int **pipes);
 
 #endif
