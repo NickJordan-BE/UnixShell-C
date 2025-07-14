@@ -1,3 +1,9 @@
+/**
+ * @file commands.c
+ * @brief Contains all built-in functions
+ *
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -5,6 +11,12 @@
 #include <regex.h>
 #include "../include/parser.h"
 
+/**
+ * @brief Echos input to shell
+ * 
+ * @param argc token count
+ * @param argv command tokens
+ */
 void echo_command(int argc, char **argv) {
     if (argv[0][0] != '"' || argv[argc - 1][strlen(argv[argc - 1]) - 1] !=  '"') {
         fprintf(stderr, "Unknown\n");
@@ -26,6 +38,12 @@ void echo_command(int argc, char **argv) {
     printf("\n");
 }
 
+/**
+ * @brief Changes current directory
+ * 
+ * @param argc token count
+ * @param argv command tokens
+ */
 void cd_command(int argc, char **argv) {
     if (argc != 1) {
         fprintf(stderr, "Incorrect Argument Numbers");
@@ -40,6 +58,12 @@ void cd_command(int argc, char **argv) {
     }
 }
 
+/**
+ * @brief Exits shell
+ * 
+ * @param argc token count
+ * @param argv command tokens
+ */
 void exit_command(int argc, char **argv) {
     (void)argc, (void)argv;
     free_tokens();
@@ -47,11 +71,23 @@ void exit_command(int argc, char **argv) {
     exit(0);
 }
 
+/**
+ * @brief Displays supported commands
+ * 
+ * @param argc token count
+ * @param argv command tokens
+ */
 void help_command(int argc, char **argv) {
     (void)argc, (void)argv;
-    printf("Supported Commands:\n1. echo\n2. cd\n3. exit\n4. help\n");
+    printf("Supported Commands:\n1. echo\n2. cd\n3. exit\n4. help\n5. history\n6. sizeof\n7. clear\n8. pwd\n9. grep");
 }
 
+/**
+ * @brief Displays command history
+ * 
+ * @param argc token count
+ * @param argv command tokens
+ */
 void history_command(int argc, char **argv) {
     if (argc != 0) {
         char *cmd = argv[0];
@@ -85,17 +121,35 @@ void history_command(int argc, char **argv) {
     }
 }
 
+/**
+ * @brief Displays how many arguments passed into command
+ * 
+ * @param argc token count
+ * @param argv command tokens
+ */
 void sizeof_command(int argc, char **argv) {
     (void)argv;
     printf("%i\n", argc);
 }
 
+/**
+ * @brief Clears display and resest cursor
+ * 
+ * @param argc token count
+ * @param argv command tokens
+ */
 void clear_command(int argc, char **argv) {
     (void)argc, (void)argv;
     printf("\033[H\033[J");
     fflush(stdout);
 }
 
+/**
+ * @brief Prints current working directory
+ * 
+ * @param argc token count
+ * @param argv command tokens
+ */
 void pwd_command(int argc, char **argv) {
     (void)argc, (void)argv;
     char buffer[1024];
@@ -107,6 +161,12 @@ void pwd_command(int argc, char **argv) {
     }
 }
 
+/**
+ * @brief Checks for patterns in files
+ * 
+ * @param argc token count
+ * @param argv command tokens
+ */
 void grep_command(int argc, char **argv) {
     if (argc < 2) {
         fprintf(stderr, "Invalid number of arguments.");

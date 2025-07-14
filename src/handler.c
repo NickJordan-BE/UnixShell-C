@@ -12,6 +12,7 @@
 #include <sys/wait.h>
 #include <../include/commands.h>
 #include <../include/external.h>
+#include <../include/piping.h>
 
 // Pointer to a function with parameters argc and **argv
 typedef void (*CommandFunction)(int argc, char **argv);
@@ -57,7 +58,7 @@ CommandFunction get_command(const char *name) {
 }
 
 /**
- * @brief Executes commands
+ * @brief Handles command execution structure
  *  
  * Dispatches parsed tokens to corresponding function to be executed.
  * If the function does not exist, it tries to fork and run an external command.
@@ -68,6 +69,12 @@ CommandFunction get_command(const char *name) {
 void dispatch_command(int full_argc, char **full_argv) {
     if (full_argc == 0) {
         fprintf(stderr, "Nothing Entered\n");
+        return;
+    }
+
+    if (check_pipes(full_argv) == 1) {
+        SplitCmds cmds = split_pipes(full_argv);
+        execute_pipes(cmds.count, cmds.cmds);
         return;
     }
 

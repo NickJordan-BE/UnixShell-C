@@ -8,7 +8,6 @@
 #include <signal.h>
 #include "../include/parser.h"
 #include "../include/handler.h"
-#include "../include/piping.h"
 
 /**
  * @brief Ends current process and reprompts shell at SIGINT
@@ -47,13 +46,8 @@ void shell_loop() {
         buffer[strcspn(buffer, "\n")] = '\0';
 
         ParseResult res = parse_line(buffer);
-
-        if (check_pipes(res.tokens) == 1) {      
-            SplitCmds cmds = split_pipes(res.tokens);
-            handle_pipes(cmds.count, cmds.cmds);
-        } else {
-            dispatch_command(res.count, res.tokens);
-        }
+        
+        dispatch_command(res.count, res.tokens);
     }
 
     fclose(fp);
