@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include "../include/redirection.h"
+#include "../include/jobs.h"
 
 
 /**
@@ -21,14 +22,24 @@
 void execute_external(int argc, char **argv) {
     pid_t pid = fork();
 
+    int background = check_for_background(argv);
+
+    if (background) {
+        argv = argv - 1;
+    }
+   
     if (pid == 0) {
         argv = handle_redirection(argc, argv);
         execvp(argv[0], argv);
         perror("Shelldon Failed: ");
-    } else if (pid > 0 ) {
+    }
+
+    if (background) {
+        //track_job();
+        printf("Job#: 1 Pid#: %i\n", pid);
+    } else {
         int status;
         waitpid(pid, &status, 0);
-    } else {
-        perror("Fork Failed: ");
     }
+
 }
