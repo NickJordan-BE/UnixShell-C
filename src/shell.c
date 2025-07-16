@@ -28,6 +28,7 @@ void shell_loop() {
         fprintf(stderr, "Error opening history file.");
         exit(EXIT_FAILURE);
     }
+    
     char buffer[1024];
 
     while (1) {  

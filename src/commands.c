@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <regex.h>
 #include "../include/parser.h"
+#include "../include/jobs.h"
 
 /**
  * @brief Echos input to shell
@@ -207,4 +208,10 @@ void grep_command(int argc, char **argv) {
     regfree(&regex);
     free(line);
     fclose(fp);
+}
+
+void jobs_command(int argc, char **argv) {
+    (void)argc;
+    (void)argv;
+    print_jobs();
 }
