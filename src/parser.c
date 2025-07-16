@@ -64,6 +64,9 @@ ParseResult parse_line(char *line) {
     return result;
 }
 
+/**
+ * @brief Frees token memory allocation
+ */
 void free_tokens() {
     free(result.tokens);
     result.tokens = NULL;

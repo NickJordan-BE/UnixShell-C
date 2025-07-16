@@ -1,8 +1,22 @@
+/**
+ * @file redirection.c
+ * @brief Handles redirection commands
+ *
+ */
+
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdio.h>
 
+
+/**
+ * @brief Redirects input and output based on redirection command.
+ * 
+ * @param argc token count
+ * @param argv tokens for command
+ * @return modified tokens without redirection tokens for proper execv call
+ */
 char **handle_redirection(int argc, char **argv) {
     int fd = 0;
     int found = 0;

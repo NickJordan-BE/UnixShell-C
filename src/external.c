@@ -1,3 +1,10 @@
+/**
+ * @file external.c
+ * @brief Handles external commands.
+ *
+ * Logic for executing external commands not built-in to the shell.
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -6,6 +13,13 @@
 #include "../include/jobs.h"
 #include "../include/main.h"
 
+
+/**
+ * @brief Forks and Executes external command
+ * 
+ * @param argc token count
+ * @param argv tokens for command (including command name)
+ */
 void execute_external(int argc, char **argv) {
     int background = check_for_background(argv);
 
