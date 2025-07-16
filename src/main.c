@@ -5,8 +5,6 @@
  */
 #include "../include/shell.h"
 
-extern pid_t shell_pgid;
-
 /** 
  * @brief Used for clean entry, starting the shell loop.
  * 

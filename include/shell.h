@@ -6,7 +6,7 @@
 #include "../include/parser.h"
 #include "../include/handler.h"
 
-void shell_loop();
+void shell_loop(void);
 
 #endif
 
