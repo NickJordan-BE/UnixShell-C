@@ -36,6 +36,7 @@ CommandMapping commands[] = {
     {"sizeof", sizeof_command},
     {"clear", clear_command},
     {"grep", grep_command},
+    {"jobs", jobs_command},
     {NULL, NULL}
 };
 
@@ -81,6 +82,7 @@ void dispatch_command(int full_argc, char **full_argv) {
     const char *cmd_name = full_argv[0];
 
     CommandFunction cmd_fn = get_command(cmd_name);
+   
 
     if (cmd_fn) {
         cmd_fn(full_argc - 1, full_argv + 1);
