@@ -1,115 +1,77 @@
-🐚 Shelldon — A Custom Unix Shell in C
-Shelldon is a minimalist Unix shell built from scratch in C, designed to provide hands-on experience with systems programming, including process control, input parsing, file redirection, and piping. It emulates core functionality found in popular shells like Bash and Dash, while maintaining a clean and extensible codebase.
+# Shelldon
 
-🚀 Features
-✅ Core Functionality
-Interactive Shell Loop
-Displays a prompt (dash>) and continuously accepts user commands.
+**Shelldon** is a Unix-style shell built entirely in C. It replicates essential functionality of traditional shells like `bash`, including command execution, piping, redirection, job control, and signal handling. The project was developed to gain a deep understanding of how operating systems and terminal interfaces work under the hood.
 
-Command Execution
+---
 
-Built-in commands (e.g., cd, exit, pwd, echo)
+## 🚀 How to Run
 
-External commands via execvp() (e.g., ls, cat, wc)
+### Prerequisites
 
-I/O Redirection
+- C compiler (e.g., `gcc` or `clang`)
+- Unix-based OS (Linux/macOS)
 
-Input (<)
+### Build and Run
 
-Output (>)
+Using the provided Makefile:
 
-Append (>>)
+```bash
+make
+./shelldon
+Or compile manually:
 
-Piping Support
-
-Multi-stage pipes supported (e.g., ls | grep .c | wc -l)
-
-Command History
-
-In-memory tracking of commands (e.g., history)
-
-Displays recent commands from session
-
-🧰 Built-In Commands
-Command	Description	Example
-cd	Change directory	cd ~/projects
-exit	Exit the shell	exit
-help	Show supported commands	help
-pwd	Print current working directory	pwd
-echo	Print to standard output	echo Hello World!
-clear	Clear the terminal screen	clear
-history	Show previously entered commands	history
-sizeof	Print number of arguments passed	sizeof ls -la
-grep	Search lines matching a pattern in file	grep main main.c
-
-🧪 External Commands
-Supported via execvp(), any valid system binary in your $PATH can be executed.
-
-Examples: ls, cat, sort, head, tail, diff, wc, top, ps, etc.
-
-🔧 Design Overview
-Shelldon is split into modular components for clarity and ease of development:
-
-main.c
-Entry point that initializes the shell and launches the REPL loop.
-
-shell.c
-Implements the main interactive loop. Handles prompt display, reading input, and coordinating parsing + execution.
-
-parser.c
-Responsible for tokenizing user input, splitting by pipes or redirection symbols, and building structured argument lists.
-
-commands.c
-Implements built-in commands such as cd, exit, echo, pwd, etc.
-Dispatches commands that must be handled within the current process.
-
-external.c
-Handles execution of external programs using fork(), execvp(), and waitpid().
-
-redirection.c
-Manages input (<), output (>), and append (>>) redirection.
-Modifies file descriptors appropriately using dup2() before execution.
-
-piping.c
-Supports single and multi-stage pipes by creating and managing file descriptors.
-Routes stdout/stdin between processes in a pipeline.
-
-handler.c
-Acts as a coordinator — decides if the command is built-in or external, and routes execution through the correct logic.
-
-🧪 Example Commands to Try
 bash
-Copy code
-ls -la | grep .c | wc -l
-cat input.txt > output.txt
-sort < unsorted.txt > sorted.txt
-cd src
-pwd
-echo Hello World!
-history
-📚 Key Concepts Used
-fork(), execvp(), waitpid()
+Copy
+Edit
+gcc -o shelldon main.c handler.c parser.c piping.c redirection.c external.c commands.c shell.c
+./shelldon
+```
+✅ Implemented Features
+Command Parsing – Tokenization, argument handling, command separation
 
-pipe(), dup2()
+External Command Execution – Executes system binaries like ls, cat, grep
 
-chdir(), getcwd()
+Built-in Commands – Includes cd, exit, fg, bg, jobs
 
-String parsing and tokenization
+Multi-Stage Piping – Supports complex pipelines like ls | grep c | sort
 
-Dynamic memory allocation (malloc, free)
+Redirection – Input/output redirection using <, >, and >>
 
-ANSI escape codes for terminal control
+Job Control – Handles background execution (&), jobs, fg, bg
 
-🔮 Possible Future Work
-Background job execution (&)
+Signal Handling – Supports Ctrl+C (SIGINT), Ctrl+Z (SIGTSTP), SIGCHLD for job tracking
 
-jobs, fg, bg support
+💡 What I Learned
+This project gave me a practical, in-depth understanding of:
 
-Persistent command history
+Process creation and management using fork, execvp, and waitpid
 
-Tab completion
+Inter-process communication with pipe and dup2
 
-Scripting support
+Managing Unix signals and implementing foreground/background job control
+
+Writing modular, maintainable C code across multiple source files
+
+How a real shell parses and executes commands while maintaining interactivity
+
+📂 Project Structure
+main.c – Shell initialization and REPL loop
+
+handler.c – Dispatches built-in and external commands
+
+parser.c – Parses user input into executable tokens
+
+piping.c – Sets up and handles multi-stage pipes
+
+redirection.c – Implements input/output redirection logic
+
+external.c – Forks and runs external programs
+
+commands.c – Built-in command implementations
+
+shell.c – Core shell control logic and signal setup
+
+Shelldon was built from the ground up as a systems programming exercise. It's a lightweight, interactive, and modular shell implementation that mirrors many of the control mechanisms found in production Unix shells.
 
 🧑‍💻 Author
 Nicholas Jordan
