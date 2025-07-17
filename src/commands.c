@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <regex.h>
+#include <signal.h>
 #include "../include/parser.h"
 #include "../include/jobs.h"
 
@@ -210,8 +211,62 @@ void grep_command(int argc, char **argv) {
     fclose(fp);
 }
 
+/**
+ * @brief Prints all background jobs
+ * 
+ * @param argc token count
+ * @param argv command tokens
+ */
 void jobs_command(int argc, char **argv) {
     (void)argc;
     (void)argv;
     print_jobs();
+}
+
+/**
+ * @brief Brings job to the foreground
+ * 
+ * @param argc token count
+ * @param argv command tokens
+ */
+void fg_command(int argc, char **argv) {
+    if (argc != 1) {
+        return;
+    }
+    job_t *job;
+
+    if (!(job = find_job(argv[0]))) {
+        printf("No Job with Given Job ID\n");
+        return;
+    }
+
+    if (job->pgid > 0) {
+        kill(job->pgid, SIGCONT);           
+        waitpid(job->pgid, NULL, 0);        
+        remove_job(job);
+    }
+}
+
+/**
+ * @brief Resumes job in the background
+ * 
+ * @param argc token count
+ * @param argv command tokens
+ */
+void bg_command(int argc, char **argv) {
+    if (argc != 1) {
+        return;
+    }
+    job_t *job;
+
+    if (!(job = find_job(argv[0]))) {
+        printf("No Job with Given Job ID\n");
+        return;
+    }
+
+    if (job->pgid > 0) {
+        kill(job->pgid, SIGCONT);
+        job->status = RUNNING;
+        printf("[%d] %d resumed in background\n", job->job_id, job->pgid);
+    }
 }

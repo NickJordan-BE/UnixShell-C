@@ -37,6 +37,8 @@ CommandMapping commands[] = {
     {"clear", clear_command},
     {"grep", grep_command},
     {"jobs", jobs_command},
+    {"fg", fg_command},
+    {"bg", bg_command},
     {NULL, NULL}
 };
 
@@ -69,7 +71,6 @@ CommandFunction get_command(const char *name) {
  */
 void dispatch_command(int full_argc, char **full_argv) {
     if (full_argc == 0) {
-        fprintf(stderr, "Nothing Entered\n");
         return;
     }
 

@@ -21,8 +21,10 @@ void sigint_handler() {
  * @brief Shell loop for prompting, calling parsing, history tracking and function handling.
  */ 
 void shell_loop() {
+    signal(SIGINT, SIG_IGN);
+    signal(SIGTSTP, SIG_IGN);
+
     FILE *fp = fopen("shelldon-history.txt", "a+");
-    signal(SIGINT, sigint_handler);
 
     if (fp == NULL) {
         fprintf(stderr, "Error opening history file.");
